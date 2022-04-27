@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href = "..\..\..\media\favicon.ico"/>
+    <title>Django BookStore | Cadastro</title>
+</head>
+<body>
+    
+    <a href="{% url 'url_home'%}">Django BookStore</a>
+    
+    <h1>Faça seu cadastro</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+
+        {{ form }}
+        <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+    </form>
+    <a href='/accounts/login'>Ja tem uma conta?</a>
+</body>
+</html>

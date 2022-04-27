@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+argu
+
+{% endblock %}
+
+
+{% block content %}
+
+<h1>String: {{ name }}</h1>
+<h1>Inteiro: {{ inteiro }}</h1>
+
+{% endblock %}
+
+
+<ul class="list">
+
+    {% for transacao in transacoes %}
+
+        <li class="list-item">
+            {{ transacao }}
+        </li>
+
+    {% endfor %}

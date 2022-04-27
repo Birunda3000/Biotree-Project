@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block title %}
+
+DBacess
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div class="field has-addons has-addons-right search">
+    <p class="control">
+
+        <input type="text" id="search" name="search" placeholder="Digite sua busca aqui">
+
+        <select name="method">
+            <option>Dominio</option>
+            <option>Reino</option>
+            <option>Filo</option>
+            <option>Classe</option>
+            <option>Ordem</option>
+            <option>Familia</option>
+            <option>Genero</option>
+            <option>Especie</option>
+            <option>Sub-Especie</option>  
+        </select>
+
+        <i class="fas fa-search" id="search-btn"></i>
+
+        <a href="{% url 'url_adicionar' %}"><p><i class="fas fa-plus"></i>Adicionar</p></a>
+    
+    </p>
+</div>
+
+<ul>
+    {% for dado in dados2 %}
+        <li>
+        <h3>{{ dado.nome }}</h3>
+        <a href="{% url 'url_update' dado.id %}"> <i class="fas fa-edit"></i> </a>
+        <a href="{% url 'url_delete' dado.id %}"> <i class="fas fa-trash"></i> </a>
+
+        <br>
+
+        <img src="../../../media/{{ dado.image }}">
+
+        {{ dado.image }}
+        <p>{{ dado.descrição }}</p>
+
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
