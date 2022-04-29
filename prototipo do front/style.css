@@ -34,11 +34,24 @@ header {
 
 }
 
+main{
+  color:azure;
+}
+
+
 header h1 {
 
   width: 100%;
 
 }
+
+.fa-edit{
+  color: orange;
+}
+.fa-trash{
+  color: rosybrown;
+}
+
 
 .items {
 
@@ -75,4 +88,15 @@ footer {
   width: 100%;
   color: #294c4e;
   text-align: center;
+}
+
+.container{
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+.container2{
+  display: flex;
+  width: 100%;
+  gap: 10px;
 }

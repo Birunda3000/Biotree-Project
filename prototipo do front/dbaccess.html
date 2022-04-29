@@ -2,9 +2,15 @@
 <html lang="pt-br">
 
 <head>
+
+    <link rel="shortcut icon" href = "icone.ico"/>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://kit.fontawesome.com/63f956fcef.js" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="style.css">
     <title>Biotree | DBAccess</title>
 </head>
@@ -13,8 +19,7 @@
 
     <header>
 
-        <h1>Bio tree</h1>
-        <a href="home.html"> <h1>Bio tree</h1> </a>
+        <a href="home.html"><h1>Bio tree</h1></a>
 
         <div class="items">
             <a href="login.html">Entrar</a>
@@ -28,11 +33,55 @@
     </header>
 
     <main>
-        <p>Acesso a o CRUD da base de dados</p>
+            <p>Acesso a o CRUD da base de dados</p>
+
+        <div class="container">
+        
+            <input type="text" id="search" name="search" placeholder="Digite sua busca aqui">
+
+            <select name="method">
+                <option>Dominio</option>
+                <option>Reino</option>
+                <option>Filo</option>
+                <option>Classe</option>
+                <option>Ordem</option>
+                <option>Familia</option>
+                <option>Genero</option>
+                <option>Especie</option>
+                <option>Sub-Especie</option>  
+            </select>
+
+            <i class="fas fa-search" id="search-btn"></i>
+            <a href="em_construcao.html"><p><i class="fas fa-plus"></i>Adicionar</p></a>
+            
+        </div>
+
+        <ul>
+
+            <li>
+            
+                <div class="container2">
+                    <h3>Dogos Familiaris</h3>
+                    <a href="em_construcao.html"> <i class="fas fa-edit"></i> </a>
+                    <a href="em_construcao.html"> <i class="fas fa-trash"></i> </a>
+                </div>
+
+                
+                <h4>Especie</h4>
+
+                <br>
+
+                <img src="dogo.png">
+
+                <p>Animal presente em diversas casas no mundo</p>
+
+            </li>
+
+        </ul>
     </main>
 
     <footer>
-        BIO TREE - DA ACCESS
+        BIO TREE - DB ACCESS
     </footer>
 
 </body>
