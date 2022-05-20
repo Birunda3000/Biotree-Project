@@ -34,8 +34,8 @@ header {
 
 }
 
-main{
-  color:azure;
+main {
+  color: azure;
 }
 
 header h1 {
@@ -44,16 +44,18 @@ header h1 {
 
 }
 
-.fa-plus{
+.fa-plus {
   color: green;
   gap: 10px;
 
 }
-.fa-edit{
+
+.fa-edit {
   color: orange;
   width: 20px;
 }
-.fa-trash{
+
+.fa-trash {
   color: rosybrown;
 }
 
@@ -94,21 +96,23 @@ footer {
   text-align: center;
 }
 
-.container{
+.container {
   display: flex;
   width: 100%;
   gap: 10px;
 }
 
-.container2{
+.container2 {
   display: flex;
   width: 100%;
   gap: 10px;
 }
-.container2 > a{
-width: 20px;
+
+.container2 > a {
+  width: 20px;
 }
-img{
+
+img {
   width: 200px;
   height: 200px;
 }
