@@ -70,16 +70,11 @@ DBacess
                     <p><b>Origin: </b>{{ dado.origin }}</p>
                     <p><b>Extintion: </b>{{ dado.extintion }}</p>
                     <p class="vida-description">{{ dado.description }}</p>
-
-
                     <p class="tag_list">
                         {% for tag, id in Tags|get_item:dado.name %}
                             <a href="{% url 'url_tag_detail' id %}" class="badge badge-dark">{{ tag }}</a>
-
-
                         {% endfor %}
                     </p>
-
                 </div>
             </div>
             {% if user.is_staff %}

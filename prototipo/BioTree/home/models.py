@@ -29,6 +29,11 @@ class Taxon(models.Model):
 class Tag(models.Model):
     name = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True)
+
+    image = models.ImageField(upload_to='tag_images/', null=True, blank=True)
+    image_2 = models.ImageField(upload_to='tag_images/', null=True, blank=True)
+    image_3 = models.ImageField(upload_to='tag_images/', null=True, blank=True)
+
     class Meta:
         verbose_name_plural = 'Tags'
     #resolvendo o object no admim nome melhor
@@ -49,6 +54,7 @@ class Vida(models.Model):
     image = models.ImageField(upload_to='images/', null=True, blank=True)
     image_2 = models.ImageField(upload_to='images/', null=True, blank=True)
     image_3 = models.ImageField(upload_to='images/', null=True, blank=True)
+    
     tags = models.ManyToManyField(Tag, symmetrical=False, blank=True)
 
     description = models.TextField(null=True, blank=True)
