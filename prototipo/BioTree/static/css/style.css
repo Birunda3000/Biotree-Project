@@ -1,0 +1,17 @@
+/*.user-card{
+    display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+
+    grid-template-areas:
+        "img img img"
+        "img img img"
+        "sidenav footer footer";
+}
+.user-image{
+    grid-area: img;
+}
+p{
+    color: blue;
+}
+*/

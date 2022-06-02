@@ -17,8 +17,6 @@ class image_test(models.Model):
     def __str__(self):
         return self.name
 
-
-
 class Taxon(models.Model):
     name = models.CharField(blank=True, max_length=100)
     description = models.TextField(blank=True)

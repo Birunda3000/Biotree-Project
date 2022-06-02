@@ -2,13 +2,102 @@
 
 {% block title %}Profile{% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="../static/css/style.css">{% endblock %}
+
 {% block content %}
 
+<div class="user-card">
+    <img class="user-image" src="../../../media/{{ user.user_image }}">
+    <div class="user-card-info-container">
+        <h1 class="user-name">{{ user.username }}</h1>
+        <p class="user-real-name">{{ user.first_name }} {{ user.last_name }}</p>
+        <p class="user-description">{{ user.user_description }}</p>
+        <b class="user-email">E-mail</b>
+        {{ user.email }}
+    </div>
+</div>
+
+<style>
+   .user-card{
+        display: flex;
+        border-radius: 50px;
+        background: #e0e0e0;
+        box-shadow:  20px 20px 60px #bebebe,
+        -20px -20px 60px #ffffff;
+        box-sizing: border-box;
+        padding: 30px;
+        gap: 50px;
+    }
+    .user-image{
+        border-radius: 50px;
+        width: 300px;
+    }
+    .user-card-info-container{
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<style>
+    .user-card{
+    display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+        "img name name"
+        "img real real"
+        "img des des"
+        "img ema ema";
+
+    }
+    .user-image{
+        grid-area: img;
+        border-radius: 50%;
+        width: 300px;
+        height: 300px;
+    }
+    .user-name{
+        grid-area: name;
+    }
+    .user-real-name{
+        grid-area: real;
+    }
+    .user-description{
+        grid-area: des;
+    }    
+    .user-email{
+        grid-area: ema;
+    }
+</style>-->
+
+
+
+
+
+
+
+
 <br>
-<b>Username</b> - {{ user.username }}<br>
-<b>Nome</b> - {{ user.first_name }}<br>
-<b>Sobrenome</b> - {{ user.last_name }}<br>
-<b>E-mail</b> - {{ user.email }}<br>
+<img src="../../../media/{{ user.user_image }}" style="width: 150px;height: 150px;">
 <br>
+<h2>{{ user.username }}</h2>
+{{ user.first_name }} {{ user.last_name }}<br>
+{{ user.user_description }}
+<br>
+<b>E-mail</b> - {{ user.email }}
 
 {% endblock %}
