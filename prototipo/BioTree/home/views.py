@@ -54,8 +54,6 @@ from django.template.defaulttags import register
 @register.filter
 def get_item (dictionary, key):
     x = np.array(dictionary.get(key))
-    print(f'x: {x}')
-    print('-------\n')
     return x
 
 def dbaccess(request):
