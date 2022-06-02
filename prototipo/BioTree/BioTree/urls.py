@@ -35,6 +35,7 @@ urlpatterns = [
     path('tree/', tree, name='url_tree'),
     path('dbaccess/', dbaccess, name='url_dbaccess'),
     path('about/', about, name='url_about'),
+    path('tag_detail/<int:pk>', tag_detail, name='url_tag_detail'),
 ]
 
 if settings.DEBUG:

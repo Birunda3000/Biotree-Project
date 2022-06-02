@@ -1,3 +1,6 @@
+h1{
+    color: red;
+}
 /*.user-card{
     display: grid;
         grid-template-columns: repeat(3, 1fr);

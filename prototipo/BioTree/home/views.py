@@ -49,26 +49,32 @@ def profile(request):
 def tree(request):
     return render(request, 'home/tree.html')
 
-#from itertools import chain
+import numpy as np
+from django.template.defaulttags import register
+@register.filter
+def get_item (dictionary, key):
+    x = np.array(dictionary.get(key))
+    print(f'x: {x}')
+    print('-------\n')
+    return x
 
 def dbaccess(request):
     data = {}
-    data['Vida'] = Vida.objects.all()
-    '''    
-    vida = Vida.objects.all() 
-    dominio = Dominio.objects.all()
-    reino = Reino.objects.all() 
-    filo = Filo.objects.all()
-    classe = Classe.objects.all()
-    ordem = Ordem.objects.all()
-    familia = Familia.objects.all()
-    genero = Genero.objects.all()
-    especie = Especie.objects.all()
-    subespecie = SubEspecie.objects.all()   
-    data['dados'] = chain(vida, dominio, reino, filo, classe, ordem, familia, genero, especie, subespecie)
-    data['dados2'] = vida
-    '''
+    vida = Vida.objects.all()
+    t = {}
+    for v in vida:
+        t[v.name] = [x for x in v.tags.all()]
+        t[v.name] = [[x.name, x.id] for x in t[v.name] ]
+    data['Vida'] = vida
+    data['Tags'] = t
     return render(request, 'home/dbaccess.html', data)
 
 def about(request):
     return render(request, 'home/about.html')
+
+def tag_detail (request, pk):
+    data = {}
+    object = Tag.objects.get(pk=pk)
+    data['dado'] = object
+
+    return render(request, 'home/tag_detail.html', data)

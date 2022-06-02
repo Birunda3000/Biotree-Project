@@ -8,49 +8,44 @@
 {% block content %}
 
 <div class="user-card">
-    <img class="user-image" src="../../../media/{{ user.user_image }}">
+    <img class="user-image" src="{{ user.user_image.url }}">
     <div class="user-card-info-container">
-        <h1 class="user-name">{{ user.username }}</h1>
+        <h3 class="user-name">{{ user.username }}</h3>
+        <h5 class="user-class">{% if user.is_staff %} <b>Admin</b> {% endif %}</h5>
         <p class="user-real-name">{{ user.first_name }} {{ user.last_name }}</p>
         <p class="user-description">{{ user.user_description }}</p>
-        <b class="user-email">E-mail</b>
-        {{ user.email }}
+        <p class="user-email"><b class="user-email">E-mail:</b> {{ user.email }}</p>
     </div>
 </div>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus molestiae, nam voluptatibus corporis
+    consequuntur quaerat praesentium alias ipsam, similique aspernatur tenetur consequatur iste soluta? Temporibus modi
+    blanditiis molestias error doloribus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat perspiciatis
+    pariatur illum obcaecati sit aperiam! Vero, minima perferendis quis quo magni obcaecati, explicabo aliquam eligendi,
+    necessitatibus est repudiandae quas in.</p>
 
 <style>
-   .user-card{
+    .user-card {
         display: flex;
         border-radius: 50px;
         background: #e0e0e0;
-        box-shadow:  20px 20px 60px #bebebe,
-        -20px -20px 60px #ffffff;
+        box-shadow: 20px 20px 60px #bebebe,
+            -20px -20px 60px #ffffff;
         box-sizing: border-box;
         padding: 30px;
-        gap: 50px;
+        gap: 30px;
+        margin-bottom: 10px;
     }
-    .user-image{
+
+    .user-image {
         border-radius: 50px;
         width: 300px;
     }
-    .user-card-info-container{
+
+    .user-card-info-container {
         display: flex;
         flex-direction: column;
     }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!--<style>
     .user-card{
@@ -83,21 +78,5 @@
         grid-area: ema;
     }
 </style>-->
-
-
-
-
-
-
-
-
-<br>
-<img src="../../../media/{{ user.user_image }}" style="width: 150px;height: 150px;">
-<br>
-<h2>{{ user.username }}</h2>
-{{ user.first_name }} {{ user.last_name }}<br>
-{{ user.user_description }}
-<br>
-<b>E-mail</b> - {{ user.email }}
 
 {% endblock %}
