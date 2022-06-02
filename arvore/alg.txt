@@ -1,0 +1,8 @@
+1 - ordena
+2 - poe o mais antigo na posição n/2 e os que sobraram ao lado em ordem
+-----------------------------------------------
+
+1 - ordena e tira o primeiro
+2 - seleciona quem se liga e ordena ao contrario
+3 - fecha o bloco
+4 - repete

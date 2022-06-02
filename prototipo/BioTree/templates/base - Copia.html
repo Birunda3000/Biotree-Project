@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioTree | {% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="..\media\Pixelkit-Flat-Jewels-Tree.ico"/>
+    
+    <!-- just style -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- just style -->
+</head>
+<body>
+
+
+
+
+
+
+    <header>
+        <nav class="navbar navbar-expand navbar-dark bg-dark mb-3">
+
+            <div class="container">
+        
+                <a class="navbar-brand" href="{% url 'url_home' %}">Bio Tree</a>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_logout' %}">Sair</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_login' %}">Entrar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'account_signup' %}">Cadastro</a>
+                    </li>
+                    {% endif %}
+                </ul>
+        
+            </div>
+        
+        </nav>
+    </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a class="nav-link" href="{% url 'url_home' %}"> <h1>Bio Tree</h1> </a>
+
+    {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'url_profile' %}"><h2>Seja bem vindo {{ user.get_username }}</h2></a>
+        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+
+    {% else %}    
+        <a class="nav-link" href="{% url 'account_signup' %}">Create account | Sign up</a>
+        <br>
+        <a class="nav-link" href="{% url 'account_login' %}">Login | Sign in</a>
+    {% endif %}
+    <br>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- just style -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <!-- just style -->
+
+</body>
+</html>

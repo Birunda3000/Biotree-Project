@@ -1,0 +1,22 @@
+{% extends 'templates\base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<br>
+<h1>Home</h1>
+<ul>
+    {% for dado in Vida %}
+        <li>
+            <h3>{{ dado.name }}</h3>
+            <h4>{{ dado.type }}</h4>
+            <img src="../../../media/{{ dado.image }}" style="width: 150px;height: 150px;">
+            <p>{{ dado.description }}</p>
+            <a href="{% url 'url_update' dado.id %}">Update</a>
+            <a href="{% url 'url_delete' dado.id %}">Delete</a>
+            <!--{{ dado.image }} -->
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

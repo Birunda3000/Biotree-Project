@@ -1,0 +1,23 @@
+{% extends 'templates\base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<br>
+<a href="{% url 'url_create' %}">Create</a>
+<br>
+<ul>
+    {% for dado in image_test_objects %}
+        <li>
+        <h2>{{ dado.name }}</h2>
+        <br>
+        <img src="../../../media/{{ dado.image }}" style="width: 150px;height: 150px;">
+        <br>
+        {{ dado.image }}
+        <a href="{% url 'url_update' dado.id %}">Update</a>
+        <a href="{% url 'url_delete' dado.id %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
