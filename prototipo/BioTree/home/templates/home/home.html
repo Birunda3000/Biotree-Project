@@ -5,18 +5,26 @@
 {% block content %}
 <br>
 <h1>Home</h1>
-<ul>
-    {% for dado in Vida %}
-        <li>
-            <h3>{{ dado.name }}</h3>
-            <h4>{{ dado.type }}</h4>
-            <img src="../../../media/{{ dado.image }}" style="width: 150px;height: 150px;">
-            <p>{{ dado.description }}</p>
-            <a href="{% url 'url_update' dado.id %}">Update</a>
-            <a href="{% url 'url_delete' dado.id %}">Delete</a>
-            <!--{{ dado.image }} -->
-        </li>
-    {% endfor %}
-</ul>
+
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img class="d-block w-100" src="../../../media/generic-image (1).jpg" alt="First slide"
+                style="width: 400px; height: 500px;">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="../../../media/generic-image (1).webp" alt="Second slide"
+                style="width: 400px; height: 500px;">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="../../../media/generic-image (2).jpg" alt="Third slide"
+                style="width: 400px; height: 500px;">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="../../../media/generic-image (2).webp" alt="4° slide"
+                style="width: 400px; height: 500px;">
+        </div>
+    </div>
+</div>
 
 {% endblock %}
