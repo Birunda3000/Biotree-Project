@@ -64,7 +64,6 @@ def dbaccess(request):
     data = {}
     vida = Vida.objects.all()
     taxon_all = Taxon.objects.all()
-    print(taxon_all)
   
     tags = {}
     for v in vida:
