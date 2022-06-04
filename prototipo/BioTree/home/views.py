@@ -52,6 +52,10 @@ def tree(request):
 import numpy as np
 from django.template.defaulttags import register
 @register.filter
+def get_item_tag (dictionary, key):
+    x = np.array(dictionary.get(key))
+    return x
+@register.filter
 def get_item (dictionary, key):
     x = np.array(dictionary.get(key))
     return x
@@ -59,20 +63,37 @@ def get_item (dictionary, key):
 def dbaccess(request):
     data = {}
     vida = Vida.objects.all()
-    t = {}
+    taxon_all = Taxon.objects.all()
+    print(taxon_all)
+  
+    tags = {}
     for v in vida:
-        t[v.name] = [x for x in v.tags.all()]
-        t[v.name] = [[x.name, x.id] for x in t[v.name] ]
+        tags[v.name] = [x for x in v.tags.all()]
+        tags[v.name] = [[x.name, x.id] for x in tags[v.name] ]
+
+    taxon = {}
+    for v in vida:
+        taxon[v.name] = v.type.id
+    
     data['Vida'] = vida
-    data['Tags'] = t
+    data['Tags'] = tags
+    data['Taxon'] = taxon
+    data['Taxon_all'] = taxon_all
     return render(request, 'home/dbaccess.html', data)
 
 def about(request):
     return render(request, 'home/about.html')
 
-def tag_detail (request, pk):
+def tag_detail(request, pk):
     data = {}
     object = Tag.objects.get(pk=pk)
     data['dado'] = object
 
     return render(request, 'home/tag_detail.html', data)
+
+def taxon_detail(request, pk):
+    data = {}
+    object = Taxon.objects.get(pk=pk)
+    data['dado'] = object
+
+    return render(request, 'home/taxon_detail.html', data)

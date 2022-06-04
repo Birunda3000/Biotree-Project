@@ -18,15 +18,20 @@ DBacess
         aria-describedby="search-addon" />
 
     <select class="form-select" aria-label="Default select example">
-        <option>Dominio</option>
-        <option>Reino</option>
-        <option>Filo</option>
-        <option>Classe</option>
-        <option>Ordem</option>
-        <option>Familia</option>
-        <option>Genero</option>
-        <option>Especie</option>
-        <option>Sub-Especie</option>
+        
+        {% for t in Taxon_all %}
+            <option value=""><b>{{ t.name }}</b></option>
+        {% endfor %}
+        <!--<option value="">Dominio</option>
+        <option value="">Reino</option>
+        <option value="">Filo</option>
+        <option value="">Classe</option>
+        <option value="">Ordem</option>
+        <option value="">Familia</option>
+        <option value="">Genero</option>
+        <option value="">Especie</option>
+        <option value="">Sub-Especie</option>-->
+
     </select>
 
     <button type="button" class="btn btn-outline-primary">search</button>
@@ -50,8 +55,10 @@ DBacess
         {% endif %}-->
 
         <div class="vida-card">
-            <h3 class="vida-name">{{ dado.name }}</h3>
-            <h4 class="vida-taxon">{{ dado.type }}</h4>
+            <h3 class="vida-name">{{ dado.name }} <span class="common-name-db" style="color: grey; font-size: small;">{{ dado.common_name }}</span> </h3>
+
+            <a id="taxon-link" href="{% url 'url_taxon_detail' Taxon|get_item:dado.name %}"><h4 class="vida-taxon">{{ dado.type }}</h4></a>
+
             <div class="vida-card-info-container">
                 <div class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
@@ -71,7 +78,7 @@ DBacess
                     <p><b>Extintion: </b>{{ dado.extintion }}</p>
                     <p class="vida-description">{{ dado.description }}</p>
                     <p class="tag_list">
-                        {% for tag, id in Tags|get_item:dado.name %}
+                        {% for tag, id in Tags|get_item_tag:dado.name %}
                             <a href="{% url 'url_tag_detail' id %}" class="badge badge-dark">{{ tag }}</a>
                         {% endfor %}
                     </p>
@@ -110,6 +117,15 @@ DBacess
     .input-group {
         padding: 10px;
         gap: 3px;
+    }
+
+    .vida-card .vida-name .common_name-db{
+        color: grey;
+        font-size: small;
+    }
+    
+    #taxon-link{
+        color:rgb(81, 95, 83);
     }
 </style>
 

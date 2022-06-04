@@ -41,8 +41,9 @@ class Tag(models.Model):
         return self.name
 
 class Vida(models.Model):
-    name = models.CharField(max_length=50)
-    type = models.ForeignKey(Taxon, on_delete=models.CASCADE,null=True,  blank=True)#!!!!!
+    name = models.CharField(max_length=80)
+    common_name = models.CharField(max_length=50, blank=True)
+    type = models.ForeignKey(Taxon, on_delete=models.CASCADE,null=True,  blank=True)#!!!!!TAXON
 
     origin = models.BigIntegerField()
     extintion = models.BigIntegerField(null=True,  blank=True)#Se NULL ainda não foi extinto

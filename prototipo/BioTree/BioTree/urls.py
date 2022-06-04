@@ -36,6 +36,7 @@ urlpatterns = [
     path('dbaccess/', dbaccess, name='url_dbaccess'),
     path('about/', about, name='url_about'),
     path('tag_detail/<int:pk>', tag_detail, name='url_tag_detail'),
+    path('taxon_detail/<int:pk>', taxon_detail, name='url_taxon_detail'),
 ]
 
 if settings.DEBUG:
