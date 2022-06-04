@@ -21,7 +21,7 @@ Requisitos:
   * tzdata==2022.1
   * urllib3==1.26.9
 
-Clone o reposiotrio e va ate a pasta prototipo/BioTree e rode '''python manage.py runserver''' no terminal, abra o navegador e acesse o endereço indicado no terminal
+Clone o reposiotrio e va ate a pasta prototipo/BioTree e rode ```python manage.py runserver``` no terminal, abra o navegador e acesse o endereço indicado no terminal
 
 Caso queria logar use a conta a seguir
 admin / admin  
