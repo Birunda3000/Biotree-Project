@@ -1,15 +1,8 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
 from .forms import *
-import datetime
 from .models import *
 
 # Create your views here.
-
-'''def home(request):
-    now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-    return HttpResponse(html)'''
 
 def home(request):
     data = {}
