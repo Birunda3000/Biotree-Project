@@ -5,4 +5,4 @@ Esse projeto pessoal ainda esta nas suas fases iniciais, mais o objetivo é cria
 * Outros: referencias  
 * Prototipo: prototipo feito em django  
 * Prototipo do front: Esboço do front end  
-Inicialmente estou fazendo um prototipo em Django as tecnologias usadas para o projeto serão NodeJs, React e Graphql.
+Inicialmente estou fazendo um prototipo em Django mas as tecnologias usadas para o projeto ainda serão decididas.
