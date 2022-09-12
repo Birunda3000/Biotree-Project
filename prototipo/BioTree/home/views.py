@@ -38,7 +38,6 @@ def profile(request):
     return render(request,'home/profile.html')
 
 #TREE
-
 def tree(request):
     return render(request, 'home/tree.html')
 
@@ -56,9 +55,33 @@ def get_item (dictionary, key):
 def dbaccess(request):
     data = {}
     vida = Vida.objects.all()
+    if request.GET.get("search") != None:
+
+        #vida = Vida.objects.filter(name=request.GET.get("search")).#filter(type=request.GET.get("taxon"))  
+        
+        print('vida')
+        
+        print('')
+        print('----------------------------')
+        print('valido!************************')
+        print(request.GET.get("taxon"))
+        print(type(request.GET.get("taxon")))
+        print(request.GET.get("search"))
+        print('----------------------------')
+        print('')
+        #realizar a filtragem na base de dados
+    else:#tem que ser None
+        print('')
+        print('----------------------------')
+        print(request.GET.get("taxon"))
+        print(type(request.GET.get("taxon")))
+        print(request.GET.get("search"))
+        print('----------------------------')
+        print('')
+
     taxon_all = Taxon.objects.all()
-  
     tags = {}
+
     for v in vida:
         tags[v.name] = [x for x in v.tags.all()]
         tags[v.name] = [[x.name, x.id] for x in tags[v.name] ]
@@ -71,6 +94,11 @@ def dbaccess(request):
     data['Tags'] = tags
     data['Taxon'] = taxon
     data['Taxon_all'] = taxon_all
+
+    if request.GET.get("search") != None or request.GET.get("taxon") != None:
+        pass
+        #return redirect('url_dbaccess')
+
     return render(request, 'home/dbaccess.html', data)
 
 def about(request):
@@ -80,12 +108,10 @@ def tag_detail(request, pk):
     data = {}
     object = Tag.objects.get(pk=pk)
     data['dado'] = object
-
     return render(request, 'home/tag_detail.html', data)
 
 def taxon_detail(request, pk):
     data = {}
     object = Taxon.objects.get(pk=pk)
     data['dado'] = object
-
     return render(request, 'home/taxon_detail.html', data)

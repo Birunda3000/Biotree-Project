@@ -1,8 +1,6 @@
 {% extends 'templates\base.html' %}
 
-
 {% load crispy_forms_tags %}
-
 
 {% block title %}
 
@@ -10,35 +8,34 @@ DBacess
 
 {% endblock %}
 
-
 {% block content %}
 
 <div class="input-group">
-    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-        aria-describedby="search-addon" />
 
-    <select class="form-select" aria-label="Default select example">
-        
-        {% for t in Taxon_all %}
-            <option value=""><b>{{ t.name }}</b></option>
-        {% endfor %}
-        <!--<option value="">Dominio</option>
-        <option value="">Reino</option>
-        <option value="">Filo</option>
-        <option value="">Classe</option>
-        <option value="">Ordem</option>
-        <option value="">Familia</option>
-        <option value="">Genero</option>
-        <option value="">Especie</option>
-        <option value="">Sub-Especie</option>-->
+    <form action="{% url 'url_dbaccess' %}" method="GET">
 
-    </select>
+        <input name="search" type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon"/>
 
-    <button type="button" class="btn btn-outline-primary">search</button>
+        <select name="taxon" class="form-select" aria-label="Default select example">
+            <option value="None"><b>----</b></option>
+            {% for t in Taxon_all %}
+                <option value="{{ t.id }}" ><b>{{ t.name }}</b></option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-outline-primary">
+            search
+        </button>
+
+    </form>
+
     {% if user.is_staff %}
     <a class="btn btn-outline-secondary" href="{% url 'url_create' %}" role="button">Add new</a>
     {% endif %}
+
+
 </div>
+
 
 <ul class="list-group list-group-flush">
     {% for dado in Vida %}
@@ -55,9 +52,11 @@ DBacess
         {% endif %}-->
 
         <div class="vida-card">
-            <h3 class="vida-name">{{ dado.name }} <span class="common-name-db" style="color: grey; font-size: small;">{{ dado.common_name }}</span> </h3>
+            <h3 class="vida-name">{{ dado.name }} <span class="common-name-db" style="color: grey; font-size: small;">{{dado.common_name }}</span> </h3>
 
-            <a id="taxon-link" href="{% url 'url_taxon_detail' Taxon|get_item:dado.name %}"><h4 class="vida-taxon">{{ dado.type }}</h4></a>
+            <a id="taxon-link" href="{% url 'url_taxon_detail' Taxon|get_item:dado.name %}">
+                <h4 class="vida-taxon">{{ dado.type }}</h4>
+            </a>
 
             <div class="vida-card-info-container">
                 <div class="carousel slide" data-ride="carousel">
@@ -79,7 +78,7 @@ DBacess
                     <p class="vida-description">{{ dado.description }}</p>
                     <p class="tag_list">
                         {% for tag, id in Tags|get_item_tag:dado.name %}
-                            <a href="{% url 'url_tag_detail' id %}" class="badge badge-dark">{{ tag }}</a>
+                        <a href="{% url 'url_tag_detail' id %}" class="badge badge-dark">{{ tag }}</a>
                         {% endfor %}
                     </p>
                 </div>
@@ -119,13 +118,13 @@ DBacess
         gap: 3px;
     }
 
-    .vida-card .vida-name .common_name-db{
+    .vida-card .vida-name .common_name-db {
         color: grey;
         font-size: small;
     }
-    
-    #taxon-link{
-        color:rgb(81, 95, 83);
+
+    #taxon-link {
+        color: rgb(81, 95, 83);
     }
 </style>
 
