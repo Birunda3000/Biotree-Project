@@ -23,6 +23,7 @@ Requisitos:
 
 Clone o reposiotrio e va ate a pasta prototipo/BioTree e rode ```python manage.py runserver``` no terminal, abra o navegador e acesse o endereço indicado no terminal
 
-Caso queria logar use a conta a seguir  
+Caso queria logar pode usar as contas a seguir  
+*Login / Senha*  
 admin / admin  
 Birunda / Birunda
