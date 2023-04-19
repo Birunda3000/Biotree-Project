@@ -6,3 +6,4 @@ Esse projeto pessoal ainda esta nas suas fases iniciais, mais o objetivo é cria
 * Prototipo: prototipo feito em django  
 * Prototipo do front: Esboço do front end  
 Inicialmente estou fazendo um prototipo em Django mas as tecnologias usadas para o projeto ainda serão decididas.
+Caso erro com templates verificar se o formato de endereço usado nas importações é compativel com sistema atual
