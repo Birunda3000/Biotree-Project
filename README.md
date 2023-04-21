@@ -10,7 +10,7 @@ Caso erro com templates verificar se o formato de endereço usado nas importaç�
 
 * Problemas 
   * Pos-hibridismo: Relação de introdução de genes depois da origem
-  * Caso exista mais de 2 relações de descendencia no mesmo retangulo seria impossivel não sobre por as setas
+  * Caso exista mais de 2 relações de descendencia no mesmo retangulo seria impossivel não sobre por as setas (como no diagrama de exemplo, C)
 * Ideias
   * Exibir em ordem topologia (ordenação topologica)
   * Vir recuando os descendentes ate ter a minima distancia
