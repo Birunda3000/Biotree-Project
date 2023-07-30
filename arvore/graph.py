@@ -15,7 +15,7 @@ graph, labels, label_mapping = load_graph(node_path, edge_path)
 # nx.draw(graph, labels=labels, with_labels=True)
 # plt.show()
 #nx.draw(graph, labels=label_mapping, with_labels=True)
-plt.show()
+#plt.show()
 
 order = return_components_in_topological_order(graph)
 flattened_list = list(itertools.chain.from_iterable(order))
@@ -23,7 +23,7 @@ df = pd.read_csv(node_path, index_col="id")
 df_edges = pd.read_csv(edge_path)
 df_edges = df_edges.dropna().reset_index(drop=True)
 
-i = 1
+'''i = 1
 for subgraph in order:
     for node in subgraph:
         x1 = i
@@ -67,10 +67,28 @@ for subgraph in order:
             plt.scatter(x2, y2, color="black", s=100)
 
         i += 1
-plt.show()
+plt.show()'''
 
 grafo = Graph(label_mapping=label_mapping, components_in_topological_order=order, df_nodes=df, df_edges=df_edges)
 grafo.draw()
 #grafo.print_info()
 
 
+
+'''        i = 1
+        for subgraph in self.components_in_topological_order:
+            for node in subgraph:
+                new_node = Node(
+                    id=node,
+                    label=self.df_nodes.loc[node, "nome"],
+                    inicio=self.df_nodes.loc[node, "inicio"],
+                    fim=self.df_nodes.loc[node, "fim"],
+                )
+                new_node.set_x1(i)
+                new_node.set_y1(-self.df_nodes.loc[node, "inicio"])
+
+                new_node.set_x2(i)
+                new_node.set_y2(-self.df_nodes.loc[node, "fim"])
+
+                self.nodes_list[node] = new_node
+                i += 1'''
