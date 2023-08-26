@@ -4,9 +4,11 @@ from enum import Enum, auto
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
+from IPython.display import display
 
 
-def create_graph(nodes, edges, label):
+def create_graph(nodes: list, edges: list, label: list) -> tuple:
+    """Create a graph from the nodes and edges lists and return a tuple with the graph, the labels and the label mapping"""
     lab = {}
     G = nx.DiGraph()
 
@@ -22,7 +24,8 @@ def create_graph(nodes, edges, label):
     return G, lab, label_mapping
 
 
-def load_graph(path_nodes, path_edges):
+def load_graph(path_nodes: str, path_edges: str) -> tuple:
+    """Load the graph from the csv files and return a tuple with the graph, the labels and the label mapping"""
     df = pd.read_csv(path_nodes)
 
     dfr = pd.read_csv(path_edges)
@@ -52,30 +55,18 @@ def return_components_in_topological_order(graph):
 
 
 class Node:
-    def __init__(self, id, label, inicio, fim):
+    def __init__(self, id: int, label: str, origin: int, extinction: int):
         self.id = id
         self.nome = label
-        self.begin = inicio
-        self.end = fim
-        self.x1 = None
-        self.x2 = None
-        self.y1 = None
-        self.y2 = None
+        self.origin = origin
+        self.extinction = extinction
+        self.x = None
 
-    def set_x1(self, x1):
-        self.x1 = x1
-
-    def set_x2(self, x2):
-        self.x2 = x2
-
-    def set_y1(self, y1):
-        self.y1 = y1
-
-    def set_y2(self, y2):
-        self.y2 = y2
+    def set_x(self, x):
+        self.x = x
 
     def __str__(self) -> str:
-        return f"Node {self.id} - {self.nome} - {self.begin} - {self.end}"
+        return f"Node {self.id} - {self.nome} - {self.origin} - {self.extinction}"
 
 
 class Edge:
@@ -98,7 +89,10 @@ class Edge:
 
     def set_destination_y(self, destination_y):
         self.destination_y = destination_y
-
+    
+    def __str__(self) -> str:
+        #return f"Edge {self.origin_id} - {self.destination_id}"
+        return f"Edge {self.origin_id} - {self.destination_id} - {self.origin_x} - {self.origin_y} - {self.destination_x} - {self.destination_y}"
 
 class Direction(Enum):
     LEFT = auto()
@@ -116,13 +110,116 @@ class Graph:
         self.df_edges = df_edges
         self.df_nodes = df_nodes
 
+        # fill the nodes_list with the info in the df_nodes
+
+        flattened_list = [item for sublist in components_in_topological_order for item in sublist]
+
+        for index, row in self.df_nodes.iterrows():
+            self.nodes_list[int(index)] = Node(
+                id=int(index),
+                label=row["nome"],
+                origin=int(-row["inicio"]),
+                extinction=int(-row["fim"]),
+            )
+            self.nodes_list[index].set_x(flattened_list.index(index))
+            #self.nodes_list[index].set_x(index)
+
+        # fill the edges_list with the info in the df_edges
+        for index, row in self.df_edges.iterrows():
+            self.edges_list.append(
+                Edge(origin_id=row["O-ID"], destination_id=row["D-ID"])
+            )
+    
+    def set_edges_coordinates(self):
+        """Set the coordinates of the edges in the graph"""
+        for edge in self.edges_list:
+
+            y = self.nodes_list[edge.destination_id].origin
+
+            edge.origin_x = self.nodes_list[edge.origin_id].x
+            edge.origin_y = y
+
+            edge.destination_x = self.nodes_list[edge.destination_id].x
+            edge.destination_y = y
+
+    
+    def draw(self):
+        """Draw the graph"""
+        #self.set_nodes_coordinates()
+        self.set_edges_coordinates()
+
+        print(self.components_in_topological_order)
+
+        for node in self.nodes_list.values():
+            plt.plot(
+                [node.x, node.x],
+                [node.origin, node.extinction],
+                color="orange",
+                linestyle="-",
+                linewidth=6,
+            )
+            plt.annotate(
+                node.nome,
+                (node.x, node.origin),
+                color="black",
+                fontsize=12,
+                ha="center",
+                va="center",
+            )
+        
+        for edge in self.edges_list:
+            print(edge)
+            plt.arrow(
+                edge.origin_x,
+                edge.origin_y,
+                edge.destination_x - edge.origin_x,
+                edge.destination_y - edge.origin_y,
+                color="black",
+                length_includes_head=True,
+                head_width=0.1,
+                head_length=0.1,
+                width=0.001,
+            )
+
+        plt.show()
+
+    def set_nodes_coordinates(self):
+        """Set the coordinates of the nodes in the graph"""
+        pass
+
+    def verify_space(self, x, y_o, y_e):
+        """Verify if there is an node can be put in the space"""
+        for node in self.nodes_list.values():
+            if node.x != x:
+                pass
+                #continue
+            elif y_e < node.origin:
+                continue
+            elif y_o > node.extinction:
+                continue
+            else:
+                return False
+        return True
+
+    def test_verify_space(self):
+        x1 = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        x2 = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        y_o = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        y_e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+
+'''
     def try_put_node(self, node_index, new_node, root, step):
         """Try to put the node in the graph, if there is space, return True, else return False"""
 
-        #if self.empty_space(x=root, y=-self.df_nodes.loc[node_index, "inicio"] and self.empty_space(x=root, y=-self.df_nodes.loc[node_index, "fim"])):
-        
-        if self.empty_space(x1=root, y1=-self.df_nodes.loc[node_index, "inicio"], x2=root, y2=-self.df_nodes.loc[node_index, "fim"]):
+        # if self.empty_space(x=root, y=-self.df_nodes.loc[node_index, "inicio"] and self.empty_space(x=root, y=-self.df_nodes.loc[node_index, "fim"])):
 
+        if self.empty_space(
+            x1=root,
+            y1=-self.df_nodes.loc[node_index, "inicio"],
+            x2=root,
+            y2=-self.df_nodes.loc[node_index, "fim"],
+        ):
             new_node.set_x1(root)
             new_node.set_y1(-self.df_nodes.loc[node_index, "inicio"])
 
@@ -136,10 +233,14 @@ class Graph:
             print("--------------------------------------------------")
             return True  # put in the middle
 
-        #if self.empty_space(x=root + step, y=-self.df_nodes.loc[node_index, "inicio"]) and self.empty_space(x=root + step, y=-self.df_nodes.loc[node_index, "fim"]):
-        
-        if self.empty_space(x1=root + step, y1=-self.df_nodes.loc[node_index, "inicio"], x2=root + step, y2=-self.df_nodes.loc[node_index, "fim"]):
+        # if self.empty_space(x=root + step, y=-self.df_nodes.loc[node_index, "inicio"]) and self.empty_space(x=root + step, y=-self.df_nodes.loc[node_index, "fim"]):
 
+        if self.empty_space(
+            x1=root + step,
+            y1=-self.df_nodes.loc[node_index, "inicio"],
+            x2=root + step,
+            y2=-self.df_nodes.loc[node_index, "fim"],
+        ):
             new_node.set_x1(root + step)
             new_node.set_y1(-self.df_nodes.loc[node_index, "inicio"])
 
@@ -153,15 +254,18 @@ class Graph:
             print("--------------------------------------------------")
             return True  # put in the right
 
-        #if self.empty_space(x=root - step, y=-self.df_nodes.loc[node_index, "inicio"]) and self.empty_space(x=root - step, y=-self.df_nodes.loc[node_index, "fim"]):
+        # if self.empty_space(x=root - step, y=-self.df_nodes.loc[node_index, "inicio"]) and self.empty_space(x=root - step, y=-self.df_nodes.loc[node_index, "fim"]):
 
-        if self.empty_space(x1=root - step, y1=-self.df_nodes.loc[node_index, "inicio"], x2=root - step, y2=-self.df_nodes.loc[node_index, "fim"]):
-        
-
+        if self.empty_space(
+            x1=root - step,
+            y1=-self.df_nodes.loc[node_index, "inicio"],
+            x2=root - step,
+            y2=-self.df_nodes.loc[node_index, "fim"],
+        ):
             new_node.set_x1(root - step)
             new_node.set_y1(-self.df_nodes.loc[node_index, "inicio"])
 
-            new_node.set_x2(root- step)
+            new_node.set_x2(root - step)
             new_node.set_y2(-self.df_nodes.loc[node_index, "fim"])
             print("--------------------------------------------------")
             print("Node: ", new_node)
@@ -243,22 +347,6 @@ class Graph:
 
         plt.show()
 
-    '''def empty_space(self, x, y):
-        """Verify if there is an node occupying the space"""
-        for node in self.nodes_list.values():
-            if not node.x1 == node.x2:
-                raise Exception("Node is not vertical")
-
-            if node.x1 == x and node.x2 == x:
-                if node.y1 <= y <= node.y2 or node.y2 <= y <= node.y1:
-                    print("--------------------------------------------------")
-                    print("False: ", node)
-                    return False
-        print("--------------------------------------------------")
-        print("line: 255")
-        print("True: ", True)
-        return True'''
-
     def empty_space(self, x1, x2, y1, y2):
         """Verify if there is an node can be put in the space"""
         for node in self.nodes_list.values():
@@ -268,13 +356,12 @@ class Graph:
                 raise Exception("Node is not vertical {x1, x2}")
 
             if node.x1 == x1 and node.x2 == x2:
-                
                 if y1 >= node.y2 or y2 <= node.y1:
                     print("--------------------------------------------------")
                     print("False: ", node)
                     return False
-        
+
         print("--------------------------------------------------")
         print("line: 255")
         print("True: ", True)
-        return True
+        return True'''
