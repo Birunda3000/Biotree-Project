@@ -18,6 +18,6 @@ df = pd.read_csv(node_path, index_col="id")
 df_edges = pd.read_csv(edge_path)
 df_edges = df_edges.dropna().reset_index(drop=True)
 
-
 grafo = Graph(label_mapping=label_mapping, components_in_topological_order=order, df_nodes=df, df_edges=df_edges)
+grafo.print_info_table()
 grafo.draw()
