@@ -6,6 +6,8 @@ import networkx as nx
 import pandas as pd
 from IPython.display import display
 from tabulate import tabulate
+import math
+import copy
 
 
 def create_graph(nodes: list, edges: list, label: list) -> tuple:
@@ -193,11 +195,6 @@ class Edge:
         return f"Edge IDs: {self.origin_id} - {self.destination_id} |Origin {self.origin_x} - {self.origin_y} |Destination {self.destination_x} - {self.destination_y}"
 
 
-class Direction(Enum):
-    LEFT = auto()
-    RIGHT = auto()
-
-
 class Graph:
     """
     A class to represent a directed graph with nodes and edges.
@@ -232,7 +229,23 @@ class Graph:
 
         flattened_list = [item for sublist in components_in_topological_order for item in sublist]
 
-        for index, row in self.df_nodes.iterrows():
+        # Create nodes in the order of the components
+        # This ensures that the nodes are created in the order of their topological components
+        for pos, node_id in enumerate(flattened_list):
+            row = self.df_nodes.loc[node_id]
+            self.nodes_list[int(node_id)] = Node(
+                id=int(node_id),
+                label=row["nome"],
+                origin=int(-row["inicio"]),
+                extinction=int(-row["fim"]),
+                )
+            origin = self.nodes_list[int(node_id)].origin
+            extinction = self.nodes_list[int(node_id)].extinction
+            x = self.find_first_available_x(y_o=origin, y_e=extinction)
+            self.nodes_list[int(node_id)].set_x(x)
+
+        # Uncomment the following lines if you want to use the original method of filling nodes_list
+        '''for index, row in self.df_nodes.iterrows():
             self.nodes_list[int(index)] = Node(
                 id=int(index),
                 label=row["nome"],
@@ -242,7 +255,7 @@ class Graph:
             origin = self.nodes_list[int(index)].origin
             extinction = self.nodes_list[int(index)].extinction
             x = self.find_first_available_x(y_o=origin, y_e=extinction)
-            self.nodes_list[int(index)].set_x(x)
+            self.nodes_list[int(index)].set_x(x)'''
 
         # fill the edges_list with the info in the df_edges
         for index, row in self.df_edges.iterrows():
@@ -251,6 +264,21 @@ class Graph:
             )
 
         self.set_edges_coordinates()# WARNING: Calling a method inside the constructor is not a good practice, but in this case, it is necessary to set the coordinates of the edges after creating the nodes.
+
+
+    def purge_node_positions(self):
+        """
+        Resets the x-coordinate positions of all nodes in the graph.
+
+        This method iterates through all nodes in the `nodes_list` and sets their
+        `x` attribute to `None`, effectively purging any previously assigned
+        x-coordinate values.
+
+        Returns:
+            None
+        """
+        for node in self.nodes_list.values():
+            node.x = None
 
 
     def set_edges_coordinates(self):
@@ -296,8 +324,8 @@ class Graph:
                 edge.destination_y - edge.origin_y,
                 color="black",
                 length_includes_head=True,
-                head_width=0.1,
-                head_length=0.1,
+                head_width=0.2,
+                head_length=0.2,
                 width=0.001,
             )
 
@@ -389,233 +417,213 @@ class Graph:
         return True
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def test_verify_space(self):
-        x1 = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        x2 = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        y_o = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        y_e = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-
-'''
-    def try_put_node(self, node_index, new_node, root, step):
-        """Try to put the node in the graph, if there is space, return True, else return False"""
-
-        # if self.empty_space(x=root, y=-self.df_nodes.loc[node_index, "inicio"] and self.empty_space(x=root, y=-self.df_nodes.loc[node_index, "fim"])):
-
-        if self.empty_space(
-            x1=root,
-            y1=-self.df_nodes.loc[node_index, "inicio"],
-            x2=root,
-            y2=-self.df_nodes.loc[node_index, "fim"],
-        ):
-            new_node.set_x1(root)
-            new_node.set_y1(-self.df_nodes.loc[node_index, "inicio"])
-
-            new_node.set_x2(root)
-            new_node.set_y2(-self.df_nodes.loc[node_index, "fim"])
-            print("--------------------------------------------------")
-            print("Node: ", new_node)
-            print("X: ", root)
-            print("Root: ", root)
-            print("Step: ", step)
-            print("--------------------------------------------------")
-            return True  # put in the middle
-
-        # if self.empty_space(x=root + step, y=-self.df_nodes.loc[node_index, "inicio"]) and self.empty_space(x=root + step, y=-self.df_nodes.loc[node_index, "fim"]):
-
-        if self.empty_space(
-            x1=root + step,
-            y1=-self.df_nodes.loc[node_index, "inicio"],
-            x2=root + step,
-            y2=-self.df_nodes.loc[node_index, "fim"],
-        ):
-            new_node.set_x1(root + step)
-            new_node.set_y1(-self.df_nodes.loc[node_index, "inicio"])
-
-            new_node.set_x2(root + step)
-            new_node.set_y2(-self.df_nodes.loc[node_index, "fim"])
-            print("--------------------------------------------------")
-            print("Node: ", new_node)
-            print("X: ", root)
-            print("Root: ", root)
-            print("Step: ", step)
-            print("--------------------------------------------------")
-            return True  # put in the right
-
-        # if self.empty_space(x=root - step, y=-self.df_nodes.loc[node_index, "inicio"]) and self.empty_space(x=root - step, y=-self.df_nodes.loc[node_index, "fim"]):
-
-        if self.empty_space(
-            x1=root - step,
-            y1=-self.df_nodes.loc[node_index, "inicio"],
-            x2=root - step,
-            y2=-self.df_nodes.loc[node_index, "fim"],
-        ):
-            new_node.set_x1(root - step)
-            new_node.set_y1(-self.df_nodes.loc[node_index, "inicio"])
-
-            new_node.set_x2(root - step)
-            new_node.set_y2(-self.df_nodes.loc[node_index, "fim"])
-            print("--------------------------------------------------")
-            print("Node: ", new_node)
-            print("X: ", root)
-            print("Root: ", root)
-            print("Step: ", step)
-            print("--------------------------------------------------")
-            return True  # put in the left
-
-        return False  # no space
-
-    def set_nodes_coordinates(self):
-        """Set the coordinates of the nodes in the graph"""
-        root = 0
-        for subgraph in self.components_in_topological_order:
-            for node in subgraph:
-                step = 0
-                new_node = Node(
-                    id=node,
-                    label=self.df_nodes.loc[node, "nome"],
-                    inicio=self.df_nodes.loc[node, "inicio"],
-                    fim=self.df_nodes.loc[node, "fim"],
-                )
-                while not self.try_put_node(
-                    node_index=node, new_node=new_node, root=root, step=step
-                ):
-                    step += 1
-                print(new_node)
-                self.nodes_list[node] = new_node
-
-    def set_edges_coordinates(self):
-        """Set the coordinates of the edges in the graph"""
-        for index, row in self.df_edges.iterrows():
-            new_edge = Edge(origin_id=row["O-ID"], destination_id=row["D-ID"])
-
-            y1 = self.nodes_list[row["D-ID"]].y1
-
-            new_edge.set_origin_x(self.nodes_list[row["O-ID"]].x1)
-            new_edge.set_origin_y(y1)
-
-            new_edge.set_destination_x(self.nodes_list[row["D-ID"]].x1)
-            new_edge.set_destination_y(y1)
-            self.edges_list.append(new_edge)
-
-    def draw(self):
-        """Draw the graph"""
-        self.set_nodes_coordinates()
-        self.set_edges_coordinates()
-
-        for node in self.nodes_list.values():
-            plt.plot(
-                [node.x1, node.x2],
-                [node.y1, node.y2],
-                color="orange",
-                linestyle="-",
-                linewidth=6,
-            )
-            plt.annotate(
-                node.nome,
-                (node.x1, node.y1),
-                color="black",
-                fontsize=12,
-                ha="center",
-                va="center",
-            )
-
+    def calculate_crossings(self):
+        """
+        Calculate the number of crossings between edges and nodes in the tree structure.
+        This method iterates through all edges in the `edges_list` and checks if any node's
+        vertical bar intersects with the horizontal line segment defined by the edge. A crossing
+        is counted if the node's vertical bar overlaps the edge's horizontal line segment.
+        Returns:
+            int: The total number of crossings detected.
+        """
+        crossings = 0
         for edge in self.edges_list:
-            plt.arrow(
-                edge.origin_x,
-                edge.origin_y,
-                edge.destination_x - edge.origin_x,
-                edge.destination_y - edge.origin_y,
-                color="black",
-                length_includes_head=True,
-                head_width=0.1,
-                head_length=0.1,
-                width=0.001,
-            )
+            # Define the horizontal edge line: from x_origin to x_destination, at height y = y_edge
+            x_start = edge.origin_x
+            x_end = edge.destination_x
+            y_edge = edge.origin_y  # Destination is defined with y equal to the origin of the descendant
 
-        plt.show()
+            # Ensure x_start is the smallest
+            if x_start > x_end:
+                x_start, x_end = x_end, x_start
 
-    def empty_space(self, x1, x2, y1, y2):
-        """Verify if there is an node can be put in the space"""
-        for node in self.nodes_list.values():
-            if not node.x1 == node.x2:
-                raise Exception("Node is not vertical {node}}")
-            if not x1 == x2:
-                raise Exception("Node is not vertical {x1, x2}")
+            # Check each node that is neither the origin nor the destination
+            for node in self.nodes_list.values():
+                if node.id in [edge.origin_id, edge.destination_id]:
+                    continue
+                # If the node is in the same vertical range (overlapping the edge line)
+                node_lower = min(node.origin, node.extinction)
+                node_upper = max(node.origin, node.extinction)
+                if node_lower <= y_edge <= node_upper:
+                    # If the node is between x_start and x_end, we consider that the edge crosses the node's bar
+                    if x_start < node.x < x_end:
+                        crossings += 1
 
-            if node.x1 == x1 and node.x2 == x2:
-                if y1 >= node.y2 or y2 <= node.y1:
-                    print("--------------------------------------------------")
-                    print("False: ", node)
-                    return False
 
-        print("--------------------------------------------------")
-        print("line: 255")
-        print("True: ", True)
-        return True'''
+                        print(f"Crossing detected: Edge {edge.origin_id} -> {edge.destination_id} crosses Node {node.id} at x={node.x}, y={y_edge}")#debug
+
+        return crossings
+
+
+    def calculate_sum_vector_lengths(self):
+        """
+        Calculates the sum of the horizontal distances (vector magnitudes) 
+        between related nodes in a tree structure.
+
+        For each edge in the tree, the magnitude is computed as the absolute 
+        difference between the x-coordinates of the ancestor (origin) and 
+        descendant (destination). Minimizing this value helps group ancestors 
+        and descendants closer together.
+
+        Returns:
+            float: The total sum of the horizontal distances for all edges.
+        """
+        total_length = 0
+        for edge in self.edges_list:
+            length = abs(edge.destination_x - edge.origin_x)
+            total_length += length
+        
+        print(f"Total length of vectors: {total_length}")#debug
+        return total_length
+
+
+    def calculate_overlaps(self):
+        """
+        Calculate a penalty for overlapping ancestral relationship vectors.
+
+        This method evaluates pairs of edges in the `edges_list` to determine if they overlap
+        based on their vertical (y-axis) proximity and horizontal (x-axis) intervals. If two edges
+        have y-coordinates within a specified tolerance (`delta_y`) and their x-coordinate intervals
+        overlap, a penalty is added.
+
+        Returns:
+            int: The total overlap penalty, where each overlapping pair of edges contributes to the penalty.
+        """
+        overlap_penalty = 0
+        delta_y = 0.5  # Vertical tolerance to consider that two edges "overlap"
+        for edge1, edge2 in itertools.combinations(self.edges_list, 2):
+            # Consider the y-coordinates of the vectors: we use the y of the destination (origin of the descendant)
+            y1 = edge1.origin_y
+            y2 = edge2.origin_y
+            if abs(y1 - y2) < delta_y:
+                # Check for overlap on the x-axis: if the intervals [min(x1,x2), max(x1,x2)] overlap
+                x1_min, x1_max = sorted([edge1.origin_x, edge1.destination_x])
+                x2_min, x2_max = sorted([edge2.origin_x, edge2.destination_x])
+                # If there is an intersection of the interval
+                if not (x1_max < x2_min or x2_max < x1_min):
+                    # Penalize; the greater the overlap, the higher the penalty
+                    overlap_penalty += 1
+                    print(f"Overlap detected: Edge {edge1.origin_id} -> {edge1.destination_id} overlaps with Edge {edge2.origin_id} -> {edge2.destination_id}")#debug
+
+        return overlap_penalty
+
+
+    def calculate_layout_quality(self, w1=3, w2=1, w3=6):
+        """
+        Calculate the quality of the layout based on crossings, vector lengths, and overlaps.
+        The quality is computed as a weighted negative sum of the following factors:
+        - Number of crossings (calculated using `calculate_crossings`).
+        - Sum of vector lengths (calculated using `calculate_sum_vector_lengths`).
+        - Number of overlaps (calculated using `calculate_overlaps`).
+        Parameters:
+            w1 (float): Weight for the crossings factor. Default is 3.
+            w2 (float): Weight for the sum of vector lengths factor. Default is 1.
+            w3 (float): Weight for the overlaps factor. Default is 6.
+        Returns:
+            float: The calculated quality of the layout. A lower value indicates a better layout.
+        """
+        crossings = self.calculate_crossings()
+        sum_lengths = self.calculate_sum_vector_lengths()
+        overlaps = self.calculate_overlaps()
+
+        n_edges = len(self.edges_list)
+        
+        normalized_crossings = crossings / n_edges if n_edges > 0 else 0
+        normalized_sum_lengths = sum_lengths / n_edges if n_edges > 0 else 0
+        # logarithmically normalize the overlaps
+        normalized_overlaps = math.log(1 + overlaps)
+
+
+        # multiply by -1 to make bigger quality better, the maximum quality is 0
+        quality = - (w1 * normalized_crossings + w2 * normalized_sum_lengths + w3 * normalized_overlaps)
+
+        print(f"first component: {normalized_crossings} * {w1} = {normalized_crossings * w1}")
+        print(f"second component: {normalized_sum_lengths} * {w2} = {normalized_sum_lengths * w2}")
+        print(f"third component: {normalized_overlaps} * {w3} = {normalized_overlaps * w3}")
+        print(f"Quality: {quality}")
+
+        return quality
+    
+    def get_current_solution(self):
+        """
+        Retrieves the current solution based on the nodes in the nodes_list.
+
+        This method iterates through the nodes_list dictionary, checks if each node
+        has a non-None value for its 'x' attribute, and collects the node ID along
+        with the 'x' value into a list.
+
+        Returns:
+            list: A list of tuples where each tuple contains a node ID and its 
+                  corresponding 'x' value for nodes with a non-None 'x' attribute.
+        """
+        solution = []
+        for node_id, node in self.nodes_list.items():
+            if node.x is not None:
+                solution.append((node_id, node.x))
+        return solution
+
+
+
+
+
+def evaluate_possible_solution(nodes_posicions_list, graph):
+    """
+    Evaluate a possible solution for the graph layout based on the given node positions.
+    This function calculates the quality of the layout using the `calculate_layout_quality` method, without
+    modifying the original graph. It uses the provided node positions to create a new graph instance for evaluation.
+    If the posicioning is not valid, it returns false not the quality.
+
+    Parameters:
+        nodes_posicions_list (list): A list of tuples representing the x-coordinates for each node.
+                                      Each tuple contains (node_id, x_coordinate).
+        graph (Graph): The graph object to evaluate.
+
+    Returns:
+        float or bool: The quality of the layout if the positioning is valid, otherwise False.
+
+    """
+    graph_copy = copy.deepcopy(graph)  # Create a deep copy of the graph to avoid modifying the original
+    graph_copy.purge_node_positions()  # Clear existing node positions in the copy
+
+    for node_id, x in nodes_posicions_list:
+
+        if node_id not in graph_copy.nodes_list:
+            print(f"Node {node_id} not found in the graph.")
+            return False
+
+        
+        if graph_copy.verify_space(x, graph_copy.nodes_list[node_id].origin, graph_copy.nodes_list[node_id].extinction):
+            graph_copy.nodes_list[node_id].set_x(x)
+        else:
+            print(f"Invalid positioning for node {node_id} at x={x}.")
+            return False
+    
+    graph_copy.set_edges_coordinates()  # Set edge coordinates based on the new node positions
+    quality = graph_copy.calculate_layout_quality()  # Calculate the layout quality
+
+
+    graph_copy.draw()  # Draw the graph with the new layout
+
+
+    return quality  # Return the quality of the layout
+
+
+
+def generate_random_solution():
+    """
+    Generates a random solution for the graph layout.
+
+    This function creates a random permutation of x-coordinates for the nodes in the graph.
+    It ensures that the x-coordinates are unique and within a specified range.
+
+    Returns:
+        list: A list of tuples where each tuple contains a node ID and its randomly assigned x-coordinate.
+    """
+    # Generate a random permutation of x-coordinates
+    x_coordinates = list(range(1, len(graph.nodes_list) + 1))
+    random.shuffle(x_coordinates)
+    
+    # Create a list of tuples (node_id, x_coordinate)
+    nodes_posicions_list = [(node_id, x) for node_id, x in zip(graph.nodes_list.keys(), x_coordinates)]
+    
+    return nodes_posicions_list
